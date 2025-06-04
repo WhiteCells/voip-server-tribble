@@ -1,0 +1,13 @@
+Generic single-database configuration.
+
+```sh
+alembic init alembic                         # 初始化 Alembic，生成迁移目录和配置文件
+alembic revision -m "comment"                # 生成迁移脚本
+alembic revision --autogenerate -m "comment" # 自动迁移
+alembic upgrade head                         # 应用所有尚未执行的迁移到最新版本
+alembic upgrade <hash>                       # 迁移指定版本 
+alembic downgrade -1                         # 回滚上一版本
+alembic downgrade <hash>                     # 回滚指定版本
+alembic history                              # 迁移历史
+alembic heads                                # 未合并
+```

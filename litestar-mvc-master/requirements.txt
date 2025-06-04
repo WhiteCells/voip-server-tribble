@@ -1,0 +1,10 @@
+uvicorn
+litestar
+litestar[standard]
+pydantic
+pydantic[email]
+passlib
+redis
+pydantic-settings
+python-dotenv
+alembic
