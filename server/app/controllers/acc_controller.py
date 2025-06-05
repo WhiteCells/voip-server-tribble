@@ -2,7 +2,7 @@
 
 """
 
-from litestar import Controller, get, post, Response
+from litestar import Controller, get, post, delete, Response
 from litestar.status_codes import HTTP_200_OK
 from app.services.acc_service import AccService
 from app.dto.acc_dto import CreateAccDto, PutAccDto, GetAccQuery
@@ -19,6 +19,9 @@ class AccController(Controller):
         if not success:
             return jsonify(500, None, msg)
         return jsonify(200, None, msg)
+    
+    @delete(path="/accounts")
+    async def deleteAccount(self, )
 
     @get(path="/accounts")
     async def getAccount(self, query: GetAccQuery, acc_service: AccService) -> Response:

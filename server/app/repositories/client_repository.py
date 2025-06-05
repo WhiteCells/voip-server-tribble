@@ -27,6 +27,12 @@ class ClientRepository:
             await self.__db_session.rollback()
             logger.error(f"Failed to create Client {e}")
             return False
+        
+    async def deleteClient(self, id: int) -> bool:
+        try:
+            result = await select(Client).where(Client.id == id)
+        except Exception as e:
+            return False
 
     async def putClient(self, dto: PutClientDto) -> bool:
         try:
@@ -52,8 +58,8 @@ class ClientRepository:
             logger.error(f"Failed to update client {e.__str__}")
             return False
 
-    async def existClient(self, name: str) -> bool:
-        stmt = select(Client).where(Client.name == name)
+    async def existClient(self, clientId: str) -> bool:
+        stmt = select(Client).where(Client.id == clientId)
         result = await self.__db_session.execute(stmt)
         return result.scalar_one_or_none() is not None
 
