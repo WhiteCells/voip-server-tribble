@@ -12,19 +12,26 @@ class AccService:
         self.__acc_repository = acc_repository
 
     async def createAcc(self, dto: CreateAccDto) -> bool:
-        # if await self.__acc_repository.existAcc(dto.name):
-        #     return False, "acc exist"
         success = await self.__acc_repository.createAcc(dto)
         if not success:
             return False, "Failed create"
         return True, "Create Success"
+    
+    async def deleteAcc(self, id: str) -> bool:
+        return await self.__acc_repository.deleteAcc(id)
 
-    async def putAcc(self, dto: PutAccDto) -> bool:
-
+    async def putAcc(self, id: str, dto: PutAccDto) -> bool:
+        success = await self.__acc_repository.putAcc(dto)
+        if not success:
+            return False, "Failed Put"
         return True, "Put Success"
+    
+    async def getAccById(self, id: str) -> GetAccDto:
+        acc = await self.__acc_repository.getAccById(id)
+        return GetAccDto.model_validate(acc.model_dump())
 
-    async def getAcc(self, query: GetAccQuery) -> list[GetAccDto]:
-        accs = await self.__acc_repository.getAcc(query)
+    async def getAccs(self, query: GetAccQuery) -> list[GetAccDto]:
+        accs = await self.__acc_repository.getAccs(query)
         return [GetAccDto.model_validate(acc.model_dump()) for acc in accs]
 
 

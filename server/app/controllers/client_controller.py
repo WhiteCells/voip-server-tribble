@@ -19,12 +19,22 @@ class ClientController(Controller):
         if not success:
             return jsonify(500, None, msg)
         return jsonify(200, None, msg)
-    
-    @delete(path="/clients/${clientId}", status_code=HTTP_200_OK)
-    async def deleteClient(self, clientId: str, client_service: ClientService) -> Response:
-        await client_service.deleteClient(clientId)
+
+    @delete(path="/clients/{id:str}", status_code=HTTP_200_OK)
+    async def deleteClient(self, id: str, client_service: ClientService) -> Response:
+        await client_service.deleteClient(id)
+        return jsonify(200, None, "")
+
+    @put(path="/clients/{id:str}")
+    async def putClient(self, id: str, client_service: ClientService) -> Response:
+        await client_service.putClient(id)
+        return jsonify(200, None, "")
+
+    @get(path="/clients/{id:str}")
+    async def getClientById(self, id: str, client_service: ClientService) -> Response:
         return jsonify(200, None, "")
 
     @get(path="/clients")
-    async def getClient(self, client_service: ClientService) -> Response:
+    async def getClients(self, client_service: ClientService) -> Response:
+        client_service.getClients()
         return jsonify(200, None, "")

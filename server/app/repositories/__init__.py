@@ -1,3 +1,4 @@
-from .acc_repository import provide_acc_repository
-from .client_repository import provide_client_repository
-from .dialplan_repository import provide_dialplan_repository
+from .acc_repository import AccRepository, provide_acc_repository
+from .client_repository import ClientRepository, provide_client_repository
+from .dialplan_repository import DialplanRepository, provide_dialplan_repository
+from .voip_repository import VoipRepository, provide_voip_repository

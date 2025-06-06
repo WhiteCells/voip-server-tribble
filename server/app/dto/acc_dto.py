@@ -2,13 +2,13 @@
 
 """
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, constr
+
 
 class CreateAccDto(BaseModel):
     name: str
     pwd: str
-    host: str
-    # client_id: int
+    host: str    
 
 class PutAccDto(BaseModel):
     name: str
@@ -16,10 +16,12 @@ class PutAccDto(BaseModel):
     host: str
 
 class GetAccDto(BaseModel):
-    id: int
+    id: str
     name: str
     pwd: str
     host: str
+    # status: str
+    # create_at: str
 
 class GetAccQuery(BaseModel):
     page: int = 1       # 页码

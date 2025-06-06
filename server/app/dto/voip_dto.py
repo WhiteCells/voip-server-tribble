@@ -7,6 +7,9 @@ from datetime import datetime
 
 
 class NotifyDto(BaseModel):
-    pass
+    threadNum: int
 
+
+class HeartbeatDto(BaseModel):
+    threadNum: int
 

@@ -27,12 +27,22 @@ class AccRepository:
             await self.__db_session.rollback()
             logger.error(f"Failed to create Acc {e}")
             return False
+        
+    async def deleteAcc(self, id: str) -> bool:
+        try:
+            stmt = delete(Acc).where(Acc.id == id)
+            resutl = await self.__db_session.execute(stmt)
+            await self.__db_session.commit()
+            return resutl.rowcount > 0
+        except Exception as e:
+            await self.__db_session.rollback()
+            logger.error(f"Failed to delete acc {e}")
+            return False
 
     async def putAcc(self, dto: PutAccDto) -> bool:
         try:
-            result = await self.__db_session.execute(
-                select(Acc).where(Acc.id == dto.name)
-            )
+            stmt = select(Acc).where(Acc.id == dto.name)
+            result = await self.__db_session.execute(stmt)
             acc = result.scalar_one_or_none()
 
             if acc is None:
@@ -49,10 +59,19 @@ class AccRepository:
 
         except Exception as e:
             await self.__db_session.rollback()
-            logger.error(f"Failed to update acc {e.__str__}")
+            logger.error(f"Failed to update acc {e}")
             return False
 
-    async def getAcc(self, query: GetAccQuery) -> list[GetAccDto]:
+    async def getAccById(self, id: str) -> GetAccDto:
+        stmt = select(Acc).where(Acc.id == id)
+        result = await self.__db_session.execute(stmt)
+        acc = result.scalar_one_or_none()
+        if acc is None:
+            return None
+        dto = GetAccDto(id=acc.id, name=acc.name, pwd=acc.pwd, host=acc.host)
+        return dto
+
+    async def getAccs(self, query: GetAccQuery) -> list[GetAccDto]:
         offset = (query.page - 1) * query.page_size
         stmt = select(Acc).offset(offset).limit(query.page_size)
         result = await self.__db_session.execute(stmt)

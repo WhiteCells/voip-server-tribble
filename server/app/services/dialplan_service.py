@@ -3,7 +3,7 @@
 """
 
 from typing import AsyncGenerator
-from app.dto.dialplan_dto import CreateDialplanDto, PutDialplanDto
+from app.dto.dialplan_dto import CreateDialplanDto, PutDialplanDto, GetDialplanDto
 from app.repositories.dialplan_repository import DialplanRepository
 
 
@@ -18,10 +18,16 @@ class DialplanService:
         if not success:
             return False, "Failed create"
         return True, "Create Success"
+    
+    async def deleteDialplan(self, id: str) -> bool:
+        return await self.__dialplan_repository.deleteDialplan(id)
 
     async def putDialplan(self, dto: PutDialplanDto) -> tuple[bool, str]:
         await self.__dialplan_repository.putDialplan(dto)
         return True, "Put Success"
+    
+    async def getDialplanById(self, id: str) -> GetDialplanDto:
+        await self.__dialplan_repository.getDial
     
 
 async def provide_dialplan_service(dialplan_repository: DialplanRepository) -> AsyncGenerator[DialplanService, None]:

@@ -28,6 +28,15 @@ class DialplanRepository:
             logger.error(f"Failed to create Dialplan {e}")
             return False
 
+    async def deleteDialplan(self, id: str) -> bool:
+        try:
+            stmt = delete(Dialplan).where(Dialplan.id == id)
+            resutl = await self.__db_session.execute(stmt)
+            await self.__db_session.commit()
+            return resutl.rowcount > 0
+        except Exception as e:
+            return False
+
     async def putDialplan(self, dto: PutDialplanDto) -> bool:
         try:
             # 查找现有记录
@@ -53,6 +62,7 @@ class DialplanRepository:
             await self.__db_session.rollback()
             logger.error(f"Failed to update Dialplan {dto}: {e}")
             return False
+    
         
     # todo
     async def getFreeDialplan(self, cnt: int) -> GetFreeDialplanDto:

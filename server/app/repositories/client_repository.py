@@ -6,7 +6,7 @@ from typing import AsyncGenerator
 from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from redis.asyncio import Redis
-from app.dto.client_dto import CreateClientDto, PutClientDto
+from app.dto.client_dto import CreateClientDto, PutClientDto, GetClientDto, GetClientsQuery
 from app.models.client_model import Client
 from app.utils.logger import logger
 
@@ -57,9 +57,22 @@ class ClientRepository:
             await self.__db_session.rollback()
             logger.error(f"Failed to update client {e.__str__}")
             return False
+        
+    async def getClientById(self, id: str) -> GetClientDto:
+        stmt = select(Client).where(Client.id == id)
+        result = await self.__db_session.execute(stmt)
+        return result.scalar_one_or_none()
 
-    async def existClient(self, clientId: str) -> bool:
-        stmt = select(Client).where(Client.id == clientId)
+    async def getClients(self, query: GetClientsQuery) -> list[GetClientDto]:
+        offset = (query.page - 1) * query.page_size
+        stmt = select(Client).offset(offset).limit(query.page_size)
+        result = await self.__db_session.execute(stmt)
+        clients = result.all()
+        dto_list = [GetClientDto(c) for c in clients]
+        return dto_list
+
+    async def existClient(self, id: str) -> bool:
+        stmt = select(Client).where(Client.id == id)
         result = await self.__db_session.execute(stmt)
         return result.scalar_one_or_none() is not None
 
